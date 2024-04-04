@@ -1,30 +1,30 @@
 #! /usr/bin/env node
 import inquirer from "inquirer";
-const myPin = 1234;
 let myBalance = 10000;
-let pinanswer = await inquirer.prompt([
+const myPin = 1234;
+let pinAnswer = await inquirer.prompt([
     {
-        name: "pin",
-        message: "enter your pin",
+        message: "Type your pin code",
         type: "number",
+        name: "pin",
     },
 ]);
-if (pinanswer.pin === myPin) {
-    console.log("Correct pin code !!!");
+if (pinAnswer.pin === myPin) {
     let operationAns = await inquirer.prompt([
         {
             name: "operation",
             message: "Please select option",
             type: "list",
-            choices: ["Withdraw", "Check balance"],
+            choices: ["Withdraw", "Check Balance", "Fast amount selection"]
         },
     ]);
     if (operationAns.operation === "Withdraw") {
+        console.log(`Your current balance is : ${myBalance}`);
         let amountAns = await inquirer.prompt([
             {
                 name: "amount",
-                message: "Enter your ammount",
                 type: "number",
+                message: "Enter your amount "
             },
         ]);
         if (amountAns.amount <= myBalance) {
@@ -32,13 +32,26 @@ if (pinanswer.pin === myPin) {
             console.log("Your remaining balance is : " + myBalance);
         }
         else {
-            console.log("Insuficient amount, your account balance is : " + myBalance);
+            console.log("Insuficient balance");
         }
     }
-    else if (operationAns.operation === "Check balance") {
-        console.log("Your balance is :" + myBalance);
+    else if (operationAns.operation === "Check Balance") {
+        console.log("Your balance is : " + myBalance);
+    }
+    else if (operationAns.operation === "Fast amount selection") {
+        console.log(`Your current balance is : ${myBalance}`);
+        let fastCashSelection = await inquirer.prompt([
+            {
+                name: "fastCash",
+                message: "Select one of the following :",
+                type: "list",
+                choices: ["500", "1000", "2000", "4000", "8000",]
+            }
+        ]);
+        myBalance -= fastCashSelection.fastCash;
+        console.log("Your remaining balance is : " + myBalance);
     }
 }
 else {
-    console.log("Incorrect pin number");
+    console.log("Incorrect pin code");
 }
